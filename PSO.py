@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
-# @author: lishaogang
 # @file: PSO.py
-# @time: 2020/7/24 0024 17:08
-# @desc:classical PSO algrithm
+# @desc:novel PSO algrithm
 
 import numpy as np
 import random
@@ -94,6 +92,7 @@ class PSO:
 
         # 对种群进行初始化
         self.Particle_list = [Particle(self.x_max, self.max_vel, self.dim, self.fit_function) for i in range(self.size)]
+        self.first_particles = self.Particle_list
 
     def set_bestFitnessValue(self, value):
         self.best_fitness_value = value
