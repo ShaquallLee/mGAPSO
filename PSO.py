@@ -87,6 +87,7 @@ class PSO:
         self.max_vel = max_vel  # 粒子最大速度
         self.best_fitness_value = best_fitness_value
         self.best_position = [0.0 for i in range(dim)]  # 种群最优位置
+        self.best_particle = None   #种群最优的粒子
         self.fitness_val_list = []  # 每次迭代最优适应值
         self.fit_function = fit_func #适应度函数
 
@@ -96,6 +97,9 @@ class PSO:
 
     def set_bestFitnessValue(self, value):
         self.best_fitness_value = value
+
+    def set_bestParticle(self, particle):
+        self.best_particle = particle
 
     def get_bestFitnessValue(self):
         return self.best_fitness_value
@@ -147,6 +151,7 @@ class PSO:
             part.set_ever_best_pos(part.get_best_pos())
         if value < self.get_bestFitnessValue():
             self.set_bestFitnessValue(value)
+            self.set_bestParticle(part)
             for i in range(self.dim):
                 self.set_bestPosition(i, part.get_pos()[i])
 
