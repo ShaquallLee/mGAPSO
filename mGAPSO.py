@@ -4,6 +4,7 @@
 # @desc:a micro-EA embeded in PSO
 
 from config import test_funcs
+from tools import corr
 from PSO import PSO
 import math
 
@@ -16,22 +17,6 @@ func_id = 10    #   函数序号
 mu = 0
 sigma =1
 
-
-def corr(p1, p2):
-    '''
-    直方图相关图计算
-    :param p1:
-    :param p2:
-    :return:
-    '''
-    avg1 = sum(p1)/len(p1)
-    avg2 = sum(p2)/len(p2)
-    para1 = 0
-    para2 = 0
-    for i in range(len(p1)):
-        para1 += (p1[i]-avg1)*(p2[i]-avg2)
-        para2 += ((p1[i]-avg1)**2)*((p2[i]-avg2)**2)
-    return para1/para2
 
 if __name__ == '__main__':
     pso = PSO(dim, size, iter_num1, test_funcs[func_id]['bound'], max_vel, W=0.78,C1=1.2,
