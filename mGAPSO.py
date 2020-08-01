@@ -1,24 +1,20 @@
 #!/usr/bin/env python
 # encoding: utf-8
-# @author: lishaogang
 # @file: mGAPSO.py
-# @time: 2020/7/27 0027 15:31
 # @desc:a micro-EA embeded in PSO
 
-import numpy as np
-import matplotlib.pyplot as plt
 from config import test_funcs
 from PSO import PSO
 import math
 
-dim = 30
-size = 50
-iter_num1 = 10
+dim = 30    #   粒子维度
+size = 30   #   种群大小
+iter_num1 = 10  #   迭代次数
 iter_num2 = 500 # mGA循环次数
-max_vel = 10
-func_id = 10
+max_vel = 0.6   #   最大速度
+func_id = 10    #   函数序号
 mu = 0
-sigma =10
+sigma =1
 
 
 def corr(p1, p2):
@@ -38,13 +34,17 @@ def corr(p1, p2):
     return para1/para2
 
 if __name__ == '__main__':
-    pso = PSO(dim, size, iter_num1, test_funcs[func_id]['bound'], max_vel, W=1/(2*math.log10(2.0)),C1=0.5+math.log10(2.0),
-              C2=0.5+math.log10(2.0), fit_func=test_funcs[func_id]['func'], mu =mu, sigma =sigma)
+    pso = PSO(dim, size, iter_num1, test_funcs[func_id]['bound'], max_vel, W=0.78,C1=1.2,
+              C2=1.2, fit_func=test_funcs[func_id]['func'], mu =mu, sigma =sigma)
     pso.update()
     first_particles = pso.first_particles
     best_particle = pso.best_particle
     sig = True
-    for i in range(iter_num2):
+    change_count = 0 # 用于计数，判断在50次循环内是否有过更新
+    iter_count = 0
+    while True:
+        if change_count >= 50 and iter_count >= iter_num2:  # 若超过50次循环最优没有改变且迭代次数大于500，则退出循环
+            break
         sorted_fps = sorted(first_particles, key=lambda p:corr(p.get_pos(),best_particle.get_pos()), reverse=sig)
         sig = not sig
         parts = sorted_fps[:4]+[best_particle]
@@ -68,8 +68,8 @@ if __name__ == '__main__':
             best_particle.pos = mp_pos
             best_particle.vel = mp_vel
             best_particle.update_fv()
-    print('最优解为：',best_particle.get_fitness_value())
-    # print("最优位置:" + str(best_pos))
-    # print("最优解:" + str(fit_var_list[-1]))
-    # plt.plot(np.linspace(0, iter_num, iter_num), fit_var_list)
-    # plt.show()
+            change_count = 0
+        else:
+            change_count += 1
+        iter_count += 1
+    print('最优解为：', best_particle.get_fitness_value())
