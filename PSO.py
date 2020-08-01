@@ -22,20 +22,27 @@ def boxmullersampling(mu=0, sigma=1, size=1):
 
 class Particle:
     # 初始化
-    def __init__(self, x_max, max_vel, dim, fit_fun):
-        self.__pos = [random.uniform(-x_max, x_max) for i in range(dim)]  # 粒子的位置
-        self.__vel = [random.uniform(-max_vel, max_vel) for i in range(dim)]  # 粒子的速度
+    def __init__(self, x_max, max_vel, dim, fit_fun, is_mpso):
+        self.pos = [random.uniform(-x_max, x_max) for i in range(dim)]  # 粒子的位置
+        self.vel = [random.uniform(-max_vel, max_vel) for i in range(dim)]  # 粒子的速度
         self.__bestPos = [0.0 for i in range(dim)]  # 粒子最好的位置
-        self.__fitnessValue = fit_fun(self.__pos)  # 适应度函数值
-        self.__everBestValues = [fit_fun(self.__pos)]  # 粒子曾经最好的适应值
+        self.__fitnessValue = fit_fun(self.pos)  # 适应度函数值
+        if is_mpso:
+            self.__everBestValues = []
+        else:
+            self.__everBestValues = [fit_fun(self.pos)]  # 粒子曾经最好的适应值
         self.__everBestPos = [] # 粒子曾经最好的位置
+        self.__fitFun = fit_fun
 
+    def update_fv(self, ):
+        self.__fitnessValue = self.__fitFun(self.pos)
+        self.__everBestValues.append(self.__fitnessValue)
 
     def set_pos(self, i, value):
-        self.__pos[i] = value
+        self.pos[i] = value
 
     def get_pos(self):
-        return self.__pos
+        return self.pos
 
     def set_best_pos(self, i, value):
         self.__bestPos[i] = value
@@ -44,10 +51,10 @@ class Particle:
         return self.__bestPos
 
     def set_vel(self, i, value):
-        self.__vel[i] = value
+        self.vel[i] = value
 
     def get_vel(self):
-        return self.__vel
+        return self.vel
 
     def set_fitness_value(self, value):
         self.__fitnessValue = value
@@ -72,9 +79,8 @@ class Particle:
         self.__everBestPos.append(pos)
 
 
-
 class PSO:
-    def __init__(self, dim, size, iter_num, x_max, max_vel, C1, C2, W, fit_func, best_fitness_value=float('Inf'),mu=0.0, sigma=1.0):
+    def __init__(self, dim, size, iter_num, x_max, max_vel, C1, C2, W, fit_func, best_fitness_value=float('Inf'),mu=0.0, sigma=1.0, is_mpso=False):
         self.C1 = C1
         self.C2 = C2
         self.W = W
@@ -92,7 +98,7 @@ class PSO:
         self.fit_function = fit_func #适应度函数
 
         # 对种群进行初始化
-        self.Particle_list = [Particle(self.x_max, self.max_vel, self.dim, self.fit_function) for i in range(self.size)]
+        self.Particle_list = [Particle(self.x_max, self.max_vel, self.dim, self.fit_function, is_mpso) for i in range(self.size)]
         self.first_particles = self.Particle_list
 
     def set_bestFitnessValue(self, value):
