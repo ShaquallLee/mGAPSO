@@ -94,7 +94,7 @@ class PSO:
             for part in self.Particle_list:
                 self.update_vel(part)  # 更新速度
                 self.update_pos(part)  # 更新位置
-            print(i, ': ', self.get_bestFitnessValue())
+            # print(i, ': ', self.get_bestFitnessValue())
             self.fitness_val_list.append(self.get_bestFitnessValue())  # 每次迭代完把当前的最优适应度存到列表
         return self.fitness_val_list, self.get_bestPosition()
 

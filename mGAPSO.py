@@ -72,4 +72,5 @@ if __name__ == '__main__':
         else:
             change_count += 1
         iter_count += 1
+        print(iter_count,'：', best_particle.get_fitness_value())
     print('最优解为：', best_particle.get_fitness_value())
