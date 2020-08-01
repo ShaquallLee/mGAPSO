@@ -48,7 +48,7 @@ if __name__ == '__main__':
         sorted_fps = sorted(first_particles, key=lambda p:corr(p.get_pos(),best_particle.get_pos()), reverse=sig)
         sig = not sig
         parts = sorted_fps[:4]+[best_particle]
-        sep_n = len(best_particle.get_pos())/5
+        sep_n = int(len(best_particle.get_pos())/5)
         mp_pos = []
         mp_vel = []
         for j in range(5):
